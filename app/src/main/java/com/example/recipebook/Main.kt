@@ -1,59 +1,192 @@
 package com.example.recipebook
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.recipebook.adapters.CategoriesAdapter
+import com.example.recipebook.adapters.RecipeListAdapter
+import com.example.recipebook.databinding.ActivityMainBinding
+import com.example.recipebook.databinding.FragmentMainBinding
+import com.example.recipebook.livedata.RecipeListModel
+import com.example.recipebook.modelclasses.CategoresList
+import com.example.recipebook.modelclasses.RecipeItemList
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [Main.newInstance] factory method to
- * create an instance of this fragment.
- */
 class Main : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+    companion object {
+        const val RETROFIT_DATA = "RETROFIT_DATA"
     }
+    private lateinit var adapter: CategoriesAdapter
+    private val categories = listOf(
+        CategoresList("Chicken"),
+        CategoresList("Pasta"),
+        CategoresList("Mutton"),
+        CategoresList("Rice"),
+        CategoresList("Sushi"),
+        CategoresList("Salad"),
+        CategoresList("Burger"),
+        CategoresList("Pizza")
+    )
+    private var recipeName = "chicken"
+    private lateinit var viewmodel: RecipeListModel
+    private val adapterListItem = mutableListOf<RecipeItemList>()
+    private lateinit var binding: FragmentMainBinding
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_main, container, false)
-    }
+        binding = FragmentMainBinding.inflate(layoutInflater)
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment Main.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            Main().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+        viewmodel= ViewModelProvider(requireActivity())[RecipeListModel::class.java]
+        lifecycleScope.launch(Dispatchers.IO) {
+            if(isInternetAvailable(requireActivity())) {
+                withContext(Dispatchers.Main) {
+                    viewmodel.recipeListLiveData.observe(requireActivity()) { list ->
+                        adapterListItem.clear()
+                        for (i in list){
+                            for (j in i.hits) {
+                                val calories = String.format("%.0f", j.recipe.calories)
+                                adapterListItem.add(RecipeItemList(
+                                    (j.recipe.image),
+                                    j.recipe.label,
+                                    "$calories Calories",
+                                    "${j.recipe.ingredients.size} Intergents"
+                                )
+                                )
+                                Log.d("RECIPE_LIST", "ONITEMCLICKED Recipe-->${j.recipe.ingredients[0].text}")
+
+                            }
+                            //   adapterListItem.addAll(RecipeItemList(i._links.))
+                        }
+                        val adapter = RecipeListAdapter(requireContext(), adapterListItem) {recipe->
+                            Toast.makeText(requireContext(), recipe.recipeTitle, Toast.LENGTH_SHORT).show()
+                            Log.d("RECIPE_LIST", "ONITEMCLICKED list-->$recipe")
+
+                        }
+                        binding.recipeList.adapter = adapter
+                    }
+                }
+                viewmodel.getRecipeList("chicken")
+            }else{
+                Toast.makeText(requireContext(), "No Internet Connection", Toast.LENGTH_SHORT).show()
+            }
+        }
+        if(isInternetAvailable(requireContext())) {
+        adapter = CategoriesAdapter(categories) { postion ->
+                adapterListItem.clear()
+                lifecycleScope.launch(Dispatchers.Main) {
+                    viewmodel.recipeListLiveData.observe(requireActivity()) { list ->
+                        for (i in list) {
+                            for (j in i.hits) {
+                                val calories = String.format("%.0f", j.recipe.calories)
+                                j.recipe.ingredients[0].text
+                                adapterListItem.add(
+                                    RecipeItemList(
+                                        (j.recipe.image),
+                                        j.recipe.label,
+                                        "$calories Calories",
+                                        "${j.recipe.ingredients.size} Intergents"
+                                    )
+                                )
+                                Log.d(
+                                    "RECIPE_LIST",
+                                    "ONITEMCLICKED Recipe-->${j.recipe.ingredients[0].text}"
+                                )
+
+                            }
+                            //   adapterListItem.addAll(RecipeItemList(i._links.))
+                        }
+                        val adapter =
+                            RecipeListAdapter(requireContext(), adapterListItem) { recipe ->
+                            //    Log.d("RECIPE_LIST", "ONITEMCLICKED list-->$recipe")
+                                Toast.makeText(requireContext(), recipe.recipeTitle, Toast.LENGTH_SHORT).show()
+                                findNavController().navigate(R.id.action_main_to_recipeDetailsFragment)
+
+
+                            }
+                        binding.recipeList.hasFixedSize()
+                        binding.recipeList.adapter = adapter
+
+                    }
+                    viewmodel.getRecipeList(categories[postion].title)
                 }
             }
+            binding.recyclerViewCategories.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            binding.recyclerViewCategories.hasFixedSize()
+            binding.recyclerViewCategories.adapter = adapter
+        }
+
+
+        binding.imgSearch.setOnClickListener {
+            lifecycleScope.launch {
+                recipeName = binding.editTextFindRecipe.text.toString()
+                if(binding.editTextFindRecipe.text.isNotEmpty()) {
+                    adapterListItem.clear()
+                    viewmodel.recipeListLiveData.observe(requireActivity()) { list ->
+                        for (i in list){
+                            for (j in i.hits) {
+                                val calories = String.format("%.0f", j.recipe.calories)
+                                adapterListItem.add(RecipeItemList(
+                                    (j.recipe.image),
+                                    j.recipe.label,
+                                    "$calories Calories",
+                                    "${j.recipe.ingredients.size} Intergents"
+                                )
+                                )
+                            }
+                            //   adapterListItem.addAll(RecipeItemList(i._links.))
+                        }
+
+                        val adapter = RecipeListAdapter(requireContext(), adapterListItem) {recipe->
+                            Toast.makeText(requireContext(), recipe.recipeTitle, Toast.LENGTH_SHORT).show()
+
+                        }
+                        binding.recipeList.hasFixedSize()
+                        binding.recipeList.adapter = adapter
+                    }
+
+                }
+                viewmodel.getRecipeList(recipeName)
+            }
+        }
+        return binding.root
+    }
+
+
+
+    private fun isInternetAvailable(context: Context): Boolean {
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val capabilities =
+            connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+        if (capabilities != null) {
+            if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
+                Log.i("Internet", "NetworkCapabilities.TRANSPORT_CELLULAR")
+                return true
+            } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+                Log.i("Internet", "NetworkCapabilities.TRANSPORT_WIFI")
+                return true
+            } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) {
+                Log.i("Internet", "NetworkCapabilities.TRANSPORT_ETHERNET")
+                return true
+            }
+        }
+        return false
     }
 }

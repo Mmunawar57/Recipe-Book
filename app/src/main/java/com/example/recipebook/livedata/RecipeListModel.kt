@@ -15,7 +15,6 @@ import com.example.recipebook.apis.RecipeApi
 import com.example.recipebook.apis.RetrofitObj
 import com.example.recipebook.modelclasses.RecipeItemList
 import com.example.recipebook.modelclasses.RecipeList
-import com.example.recipebook.ui.activities.MainActivity.Companion.RETROFIT_DATA
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -49,7 +48,7 @@ class RecipeListModel(application: Application) : AndroidViewModel(application) 
                 }
                 _recipeListItems.value = listOf(recipeDetails)
             } else {
-                Log.e(RETROFIT_DATA, "Failed to fetch data: ${response.code()}")
+                Log.e("RETROFIT_DATA", "Failed to fetch data: ${response.code()}")
             }
         }
     }

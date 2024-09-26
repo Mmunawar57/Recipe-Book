@@ -1,5 +1,7 @@
 package com.example.recipebook.modelclasses
 
+import android.os.Parcelable
+
 data class RecipeList(
     val _links: Links,
     val count: Int,

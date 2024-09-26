@@ -7,101 +7,12 @@
     android:layout_height="match_parent"
     tools:context=".ui.activities.MainActivity">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/layut_top"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/recyclerView_categories"
-        android:background="@drawable/main_top_drawable">
 
-        <TextView
-            android:id="@+id/txt1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Get Your Delicious Foods"
-            android:gravity="center"
-            android:textSize="21dp"
-            android:layout_marginVertical="10dp"
-            android:textColor="@color/black"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/materialCardView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/materialCardView"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            app:cardCornerRadius="20dp"
-            android:layout_marginBottom="20dp"
-            android:layout_marginHorizontal="10dp"
-            android:background="@drawable/edit_text_bg"
-            android:backgroundTint="@color/cardColor"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/txt1"
-            app:strokeColor="@color/mainColor">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <EditText
-                    android:id="@+id/editText_findRecipe"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:background="@drawable/edit_text_bg"
-
-                    android:hint="Find your recipe"
-                    android:paddingStart="20dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/img_search"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <ImageView
-                    android:id="@+id/img_search"
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:paddingHorizontal="10dp"
-                    android:src="@drawable/search"
-                    android:tint="@color/cardview_dark_background"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/editText_findRecipe"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:ignore="UseAppTint" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </com.google.android.material.card.MaterialCardView>
-    </androidx.constraintlayout.widget.ConstraintLayout>
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView_categories"
-        android:layout_width="0dp"
-        android:layout_height="60dp"
-        android:layout_marginVertical="5dp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/recipeList"
-        app:layout_constraintTop_toBottomOf="@id/layut_top"
-        tools:listitem="@layout/categores_list" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recipeList"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:text="Hello World!"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        app:spanCount="2"
-        tools:listitem="@layout/recipe_list"
-        app:layout_constraintTop_toBottomOf="@id/recyclerView_categories"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragmentContainerView"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:defaultNavHost="true"
+        app:navGraph="@navigation/nav_graph" />
 </androidx.constraintlayout.widget.ConstraintLayout>
