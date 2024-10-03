@@ -13,7 +13,7 @@ import com.example.recipebook.application.MyApplication
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 // A class to handle In-App Purchase processes in the app
-class InAppPurchaseHandler(private val activity: Activity, val sku: List<String>) {
+class InAppPurchaseHandler(private val activity: Activity) {
 
     private lateinit var billingClient: BillingClient
 
@@ -21,8 +21,11 @@ class InAppPurchaseHandler(private val activity: Activity, val sku: List<String>
         // Initialize the BillingClient
         billingClient = BillingClient.newBuilder(activity)
             .setListener { billingResult, purchases ->
+                if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && purchases != null) {
+                    handlePurchase(purchases)
+                }
                 // Handle the result of the purchase
-                handlePurchase(purchases)
+
             }
             .enablePendingPurchases()
             .build()
@@ -70,8 +73,7 @@ class InAppPurchaseHandler(private val activity: Activity, val sku: List<String>
 
     // Function to handle purchase result
     private fun handlePurchase(purchases: List<Purchase>?) {
-        if (purchases != null) {
-            for (purchase in purchases) {
+            for (purchase in purchases!!) {
                 if (purchase.purchaseState == Purchase.PurchaseState.PURCHASED && !purchase.isAcknowledged) {
                     // Acknowledge the purchase
                     val ackPurchaseParams = AcknowledgePurchaseParams.newBuilder()
@@ -89,7 +91,6 @@ class InAppPurchaseHandler(private val activity: Activity, val sku: List<String>
                     }
                 }
             }
-        }
     }
 
     // Function to show the Material Alert Dialog for purchase confirmation

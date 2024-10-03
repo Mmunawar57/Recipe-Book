@@ -57,7 +57,7 @@ class Main : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentMainBinding.inflate(layoutInflater)
-        inAppPurchaseHandler=InAppPurchaseHandler(requireActivity(), skus)
+        inAppPurchaseHandler=InAppPurchaseHandler(requireActivity())
 
         viewmodel= ViewModelProvider(requireActivity())[RecipeListModel::class.java]
         lifecycleScope.launch(Dispatchers.IO) {

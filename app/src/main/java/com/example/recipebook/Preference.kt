@@ -5,9 +5,7 @@ import android.content.Context
 class Preference(val context: Context) {
     private val preference=context.getSharedPreferences("PREFERENCE_NAME",Context.MODE_PRIVATE)
     fun setBoolean(key:String,value:Boolean){
-        val editor=preference.edit()
-        editor.putBoolean(key,value)
-        editor.apply()
+            preference.edit().putBoolean(key,value).apply()
     }
     fun getBoolean(key:String):Boolean{
         return preference.getBoolean(key,false)
