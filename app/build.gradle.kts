@@ -8,7 +8,7 @@ android {
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.recipebook"
+        applicationId = "com.recipe.cook.recipebook"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
@@ -57,4 +57,6 @@ dependencies {
     implementation(libs.squareup.retrofit)
     // GSON
     implementation(libs.converter.gson)
+    //in app purchase
+    implementation("com.android.billingclient:billing:7.0.0")
 }

@@ -21,6 +21,7 @@ import com.example.recipebook.databinding.FragmentMainBinding
 import com.example.recipebook.livedata.RecipeListModel
 import com.example.recipebook.modelclasses.CategoresList
 import com.example.recipebook.modelclasses.RecipeItemList
+import com.example.recipebook.purchases.InAppPurchaseHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -29,6 +30,7 @@ class Main : Fragment() {
     companion object {
         const val RETROFIT_DATA = "RETROFIT_DATA"
     }
+    private lateinit var inAppPurchaseHandler: InAppPurchaseHandler
     private lateinit var adapter: CategoriesAdapter
     private val categories = listOf(
         CategoresList("Chicken"),
@@ -44,14 +46,18 @@ class Main : Fragment() {
     private lateinit var viewmodel: RecipeListModel
     private val adapterListItem = mutableListOf<RecipeItemList>()
     private lateinit var binding: FragmentMainBinding
-
-
+    private  val skus= listOf("weekly_subscription","monthly_subscription","yearly_subscription")
+    override fun onStart() {
+        super.onStart()
+        inAppPurchaseHandler.startConnection()
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentMainBinding.inflate(layoutInflater)
+        inAppPurchaseHandler=InAppPurchaseHandler(requireActivity(), skus)
 
         viewmodel= ViewModelProvider(requireActivity())[RecipeListModel::class.java]
         lifecycleScope.launch(Dispatchers.IO) {
@@ -134,7 +140,8 @@ class Main : Fragment() {
 
 
         binding.imgSearch.setOnClickListener {
-            lifecycleScope.launch {
+            inAppPurchaseHandler.showConfirmationDialog(skus[0])
+         /*   lifecycleScope.launch {
                 recipeName = binding.editTextFindRecipe.text.toString()
                 if(binding.editTextFindRecipe.text.isNotEmpty()) {
                     adapterListItem.clear()
@@ -163,7 +170,7 @@ class Main : Fragment() {
 
                 }
                 viewmodel.getRecipeList(recipeName)
-            }
+            }*/
         }
         return binding.root
     }
