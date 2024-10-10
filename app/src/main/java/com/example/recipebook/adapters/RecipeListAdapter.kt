@@ -12,7 +12,7 @@ import com.bumptech.glide.Glide
 import com.example.recipebook.R
 import com.example.recipebook.modelclasses.RecipeItemList
 
-class RecipeListAdapter(private val context: Context, private val list: List<RecipeItemList>, val clickFun:(RecipeItemList)->Unit) :
+class RecipeListAdapter(private val context: Context, private val list: List<RecipeItemList>, private val clickFun:(Int)->Unit) :
     RecyclerView.Adapter<RecipeListAdapter.MyViewHolder>() {
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val imgIcon: ImageView = itemView.findViewById(R.id.img_recipe)
@@ -40,7 +40,7 @@ class RecipeListAdapter(private val context: Context, private val list: List<Rec
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         holder.itemView.setOnClickListener {
-            clickFun.invoke(list[position])
+            clickFun.invoke(position)
         }
         holder.bind(list[position])
 

@@ -26,51 +26,32 @@ class RecipeListModel(application: Application) : AndroidViewModel(application) 
     private var recipeApi: RecipeApi = RetrofitObj.getInstance().create(RecipeApi::class.java)
 
     suspend fun getRecipeList(title: String) {
-
-        GlobalScope.launch(Dispatchers.Main) {
-            val response = recipeApi.getData("public", title)
-            if(response.isSuccessful) {
-                val body = response.body()
-                val recipeItems = mutableListOf<RecipeItemList>()
-
-                body?.apply {
-                    recipeDetails=RecipeList(_links, count, from, hits, to)
-                }
-                for (i in body!!.hits) {
-                    val calories = String.format("%.0f", i.recipe.calories)
-                        recipeItems.add(RecipeItemList(
-                            (i.recipe.image),
-                            i.recipe.label,
-                            "$calories Calories",
-                            "${i.recipe.ingredients.size} Intergents"
+            GlobalScope.launch(Dispatchers.Main) {
+                val response = recipeApi.getData("public", title)
+                if(response.isSuccessful) {
+                    val body = response.body()
+                    val recipeItems = mutableListOf<RecipeItemList>()
+                    body?.apply {
+                        recipeDetails = RecipeList(_links, count, from, hits, to)
+                    }
+                    for (i in body!!.hits) {
+                        val calories = String.format("%.0f", i.recipe.calories)
+                        recipeItems.add(
+                            RecipeItemList(
+                                (i.recipe.image),
+                                i.recipe.label,
+                                "$calories Calories",
+                                "${i.recipe.ingredients.size} Intergents"
+                            )
                         )
-                    )
+                    }
+                    _recipeListItems.value = listOf(recipeDetails)
+                } else {
+                    Log.e("RETROFIT_DATA", "Failed to fetch data: ${response.code()}")
                 }
-                _recipeListItems.value = listOf(recipeDetails)
-            } else {
-                Log.e("RETROFIT_DATA", "Failed to fetch data: ${response.code()}")
             }
-        }
     }
-    fun isInternetAvailable(context: Context): Boolean {
-        val connectivityManager =
-            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val capabilities =
-            connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
-        if (capabilities != null) {
-            if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
-                Log.i("Internet", "NetworkCapabilities.TRANSPORT_CELLULAR")
-                return true
-            } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
-                Log.i("Internet", "NetworkCapabilities.TRANSPORT_WIFI")
-                return true
-            } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) {
-                Log.i("Internet", "NetworkCapabilities.TRANSPORT_ETHERNET")
-                return true
-            }
-        }
-        return false
-    }
+
 }
 //   suspend fun fetchDataFromApi(title:String){
 //       val adapterListItem= mutableListOf<RecipeItemList>()
