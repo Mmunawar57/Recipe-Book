@@ -4,6 +4,7 @@ data class RecipeItemList(
     val recipeImage: String,
     val recipeTitle: String,
     val calories: String,
-    val intergents: String
+    val ingredients: String,
+    val recipe: Recipe
 ) {
 }

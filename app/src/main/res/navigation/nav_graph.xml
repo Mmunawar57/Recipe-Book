@@ -12,7 +12,11 @@
         tools:layout="@layout/fragment_main" >
         <action
             android:id="@+id/action_main_to_recipeDetailsFragment"
-            app:destination="@id/recipeDetailsFragment" />
+            app:destination="@id/recipeDetailsFragment"
+            app:enterAnim="@anim/enter_anim"
+            app:exitAnim="@anim/exit_anim"
+            app:popEnterAnim="@anim/pop_enter_anim"
+            app:popExitAnim="@anim/pop_exit_anim" />
         <argument android:name="Recipe" />
     </fragment>
     <fragment
@@ -21,5 +25,12 @@
         android:label="fragment_recipe_details"
         tools:layout="@layout/fragment_recipe_details" >
         <argument android:name="Recipe" />
+        <action
+            android:id="@+id/action_recipeDetailsFragment_to_main"
+            app:destination="@id/main"
+            app:enterAnim="@anim/enter_anim"
+            app:exitAnim="@anim/exit_anim"
+            app:popEnterAnim="@anim/pop_enter_anim"
+            app:popExitAnim="@anim/pop_exit_anim" />
     </fragment>
 </navigation>

@@ -1,7 +1,6 @@
 package com.example.recipebook.adapters
 
 import android.content.Context
-import android.text.Layout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,8 +20,9 @@ class RecipeListAdapter(private val context: Context, private val list: List<Rec
         private val txtCalories:TextView=itemView.findViewById(R.id.txt_recipeCalories)
         fun bind(item: RecipeItemList) {
             txtTitle.text = item.recipeTitle
-            txtIntergents.text = item.intergents
-            txtCalories.text=item.calories
+            txtIntergents.text ="${item.ingredients} Intergents"
+            val formattedString=String.format("%.2f",item.calories.toDouble()/1000)
+            txtCalories.text="${formattedString}k Calories"
             Glide.with(context).load(item.recipeImage).placeholder(R.drawable.loading).into(imgIcon)
         }
 

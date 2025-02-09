@@ -1,59 +1,78 @@
 package com.example.recipebook
 
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
+import com.example.recipebook.adapters.NutritionAdapter
+import com.example.recipebook.databinding.FragmentRecipeDetailsBinding
+import com.example.recipebook.livedata.RecipeListModel
+import com.example.recipebook.modelclasses.adapterModels.Nutrition
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [RecipeDetailsFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class RecipeDetailsFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private lateinit var binding: FragmentRecipeDetailsBinding
+    private lateinit var viewModel: RecipeListModel
+    private lateinit var context: Context
+    private  var list=mutableListOf<Nutrition>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_recipe_details, container, false)
+        context=requireContext()
+        binding=FragmentRecipeDetailsBinding.inflate(layoutInflater)
+        viewModel= ViewModelProvider(requireActivity())[RecipeListModel::class.java]
+
+
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment RecipeDetailsFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            RecipeDetailsFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        viewModel.recipeSelectedItemLiveData.observe(requireActivity()) {list->
+            Log.d("RECIPE_DETAILS", "all list-->:${list} ")
+            Log.d("RECIPE_DETAILS", "nutritions list--:${list.recipe.totalNutrients} ")
+            Glide.with(context).clear(binding.imgTitle)
+            Glide.with(context).load(list.recipeImage).into(binding.imgTitle)
+            binding.txtRecipeName.text = list.recipeTitle
+            binding.txtMealValue.text=list.recipe.mealType.joinToString(", ")
+            binding.txtCousineValue.text = list.recipe.cuisineType.joinToString(", ")
+            val healthLabels = list.recipe.healthLabels.first().toString()
+            val dishType = list.recipe.dishType.joinToString(", ")
+            binding.txtCookTimeValue.text=healthLabels
+            binding.txtPrepTimeValue.text=dishType
+            Log.d("RECIPE_DETAILS_123", "nutritions dish type--:$dishType ")
+            Log.d("RECIPE_DETAILS_123", "nutritions health--:${healthLabels.length} ")
+
+            binding.txtRecipeDescription.text=list.recipe.ingredientLines.joinToString(separator = "\n")
+            // Map the digest data to Nutrition objects
+            val nutritionList = list.recipe.digest.map {
+                val formattedTotal = String.format("%.4f", it.total).toDouble()
+                Nutrition(
+                    nutritionTitle = it.label,
+                    nutritionValue = "$formattedTotal ${it.unit}"
+                )
             }
+
+            // Set the adapter
+            setAdapter(nutritionList)
+        }
+        super.onViewCreated(view, savedInstanceState)
+
     }
+    private fun setAdapter(list:List<Nutrition>){
+        val adapter= NutritionAdapter(list)
+        binding.recyclerView.layoutManager= LinearLayoutManager(context)
+        binding.recyclerView.setHasFixedSize(true)
+        binding.recyclerView.adapter=adapter
+
+    }
+
 }

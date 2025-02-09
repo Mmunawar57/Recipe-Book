@@ -3,6 +3,6 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="mainColor">#EBCA21</color>
-    <color name="cardColor">#E1F2E1E1</color>
-    <color name="cardSelectedColor">#6C7ACA</color>
+    <color name="cardColor">#E1D7CDCD</color>
+    <color name="cardThemeColor">#EBE7E7</color>
 </resources>

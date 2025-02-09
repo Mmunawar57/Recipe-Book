@@ -23,6 +23,7 @@ import com.example.recipebook.modelclasses.CategoresList
 import com.example.recipebook.modelclasses.RecipeItemList
 import com.example.recipebook.purchases.InAppPurchaseHandler
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -60,6 +61,8 @@ class Main : Fragment() {
                 withContext(Dispatchers.Main) {
                     Toast.makeText(requireContext(), "No Internet Connection", Toast.LENGTH_SHORT)
                         .show()
+                    delay(1000)
+                    binding.progressBar.visibility=View.GONE
                 }
             }
         }
@@ -69,16 +72,21 @@ class Main : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         with(binding) {
+            //initial data list when app activity launched
             adapter = CategoriesAdapter(categories) {
                 adapterListItem.clear()
                 viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
                     if(isInternetAvailable(requireContext())) {
                         viewmodel.getRecipeList(categories[it].title)
                         withContext(Dispatchers.Main) {
-                            recipeList.adapter =
+                            if(adapterListItem.isNotEmpty()){
+                                binding.progressBar.visibility=View.GONE
+                                binding.recipeList.visibility=View.VISIBLE
+                                recipeList.adapter =
                                 RecipeListAdapter(requireContext(), adapterListItem) {
-
                                 }
+                            }
+
                         }
                     } else {
                         withContext(Dispatchers.Main) {
@@ -92,62 +100,67 @@ class Main : Fragment() {
                     }
                 }
             }
+            // horizontal scroll view for categories
             recyclerViewCategories.layoutManager =
                 LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             recyclerViewCategories.adapter = adapter
-
             viewmodel.recipeListLiveData.observe(requireActivity()) { liveData ->
                 liveData.forEach {
                     val recipeList = it.hits
+                    Log.d("LIVE_DATA_OBSERVER", "onViewCreated:$liveData ")
                     adapterListItem.clear()
+                    binding.progressBar.visibility = View.VISIBLE
+                    binding.recipeList.visibility = View.INVISIBLE
                     for (i in recipeList) {
                         adapterListItem.add(
                             RecipeItemList(
                                 (i.recipe.image),
                                 i.recipe.label,
-                                "${i.recipe.calories} Calories",
-                                "${i.recipe.ingredients.size} Intergents"
+                                "${i.recipe.calories}",
+                                "${i.recipe.ingredients.size}",
+                                i.recipe
                             )
                         )
                     }
                 }
-                binding.recipeList.adapter =
-                    RecipeListAdapter(requireContext(), adapterListItem) { list ->
-                        Log.e("item_clicked", "onViewCreated List->:$list ")
-                        Log.e("item_clicked", "onViewCreated adapterListItem->:$adapterListItem ")
-                        liveData.forEach { hits ->
-                            hits.hits.forEach {
-                                Log.e("item_clicked", "onViewCreated:DIGEST ${it.recipe.digest}")
-                                Log.e("item_clicked", "onViewCreated:CALORIES ${it.recipe.calories}")
-                                Log.e("item_clicked", "onViewCreated:DIETLABEL ${it.recipe.dishType}")
-                                Log.e("item_clicked", "onViewCreated:MEALTYPE ${it.recipe.mealType}")
-                                Log.e("item_clicked", "onViewCreated: TOTAL TIME ${it.recipe.totalTime}")
-
-                            }
+                if(adapterListItem.isNotEmpty()) {
+                    binding.progressBar.visibility = View.GONE
+                    binding.recipeList.visibility = View.VISIBLE
+                    recipeList.adapter =
+                        RecipeListAdapter(requireContext(), adapterListItem) { pos ->
+                            viewmodel.selectRecipe(adapterListItem[pos])
+                            findNavController().navigate(R.id.action_main_to_recipeDetailsFragment)
                         }
-
-                        Toast.makeText(
-                            requireContext(),
-                            adapterListItem[list].recipeTitle,
-                            Toast.LENGTH_SHORT
-                        )
-                            .show()
-                    }
+                }
             }
             imgSearch.setOnClickListener {
-                recipeName = binding.editTextFindRecipe.text.toString()
-                if(recipeName.isNotEmpty()) {
+                if(isInternetAvailable(requireContext())){
+                if(binding.editTextFindRecipe.text.toString().isNotEmpty()) {
+                    recipeName = binding.editTextFindRecipe.text.toString()
                     adapterListItem.clear()
+                    binding.progressBar.visibility = View.VISIBLE
+                    binding.recipeList.visibility = View.INVISIBLE
                     viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
                         viewmodel.getRecipeList(recipeName)
                         withContext(Dispatchers.Main) {
-                            binding.recipeList.adapter =
-                                RecipeListAdapter(requireContext(), adapterListItem) {}
+                            if(adapterListItem.isNotEmpty()){
+                                binding.progressBar.visibility=View.GONE
+                                binding.recipeList.visibility=View.VISIBLE
+                                recipeList.adapter =
+                                    RecipeListAdapter(requireContext(), adapterListItem) {}
+                            }else{
+                                delay(1000)
+                                binding.progressBar.visibility=View.GONE
+                            }
                         }
                     }
                     //   binding.editTextFindRecipe.text.clear()
                 } else {
                     Toast.makeText(requireContext(), "Enter Recipe Name", Toast.LENGTH_SHORT).show()
+                }
+                    }else{
+                    Toast.makeText(requireContext(), "No Internet Connection", Toast.LENGTH_SHORT).show()
+
                 }
             }
         }

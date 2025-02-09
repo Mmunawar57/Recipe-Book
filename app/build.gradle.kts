@@ -59,4 +59,5 @@ dependencies {
     implementation(libs.converter.gson)
     //in app purchase
     implementation("com.android.billingclient:billing:7.0.0")
+    implementation ("com.airbnb.android:lottie:3.4.0")
 }

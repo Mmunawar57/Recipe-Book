@@ -23,10 +23,10 @@ class CategoriesAdapter(private val list: List<CategoresList>, val clickFun: (In
             cat.text = list[position].title
             if(position==lastSelectedPosition){
                 card.backgroundTintList =
-                    ContextCompat.getColorStateList(itemView.context, R.color.cardSelectedColor)
+                    ContextCompat.getColorStateList(itemView.context, R.color.mainColor)
             }else{
                 card.backgroundTintList =
-                    ContextCompat.getColorStateList(itemView.context, R.color.mainColor)
+                    ContextCompat.getColorStateList(itemView.context, R.color.cardThemeColor)
             }
         }
         init {

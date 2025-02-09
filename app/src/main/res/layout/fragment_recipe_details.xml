@@ -16,51 +16,346 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
-
-            <ImageView
-                android:id="@+id/img_title"
-                android:layout_width="wrap_content"
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:id="@+id/card_image"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_launcher_foreground"
-                app:layout_constraintBottom_toTopOf="@+id/txt_recipe_title"
+                app:strokeColor="@android:color/transparent"
+                app:cardElevation="4dp"
+                app:layout_constraintBottom_toTopOf="@+id/txt_recipeName"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/img_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/knife_icon" />
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
 
             <TextView
-                android:id="@+id/txt_recipe_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="Recipe Title"
+                android:id="@+id/txt_recipeName"
+                android:padding="10dp"
+                app:layout_constraintBottom_toTopOf="@id/ll_options"
+                app:layout_constraintTop_toBottomOf="@id/card_image"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                style="@style/TextAppearance.AppCompat.Headline"
                 android:textStyle="bold"
-                android:textColor="@color/black"
-                android:text="Simple Hot Spicy Itelian Pizza"
-                android:textSize="22sp"
-                android:paddingHorizontal="10dp"
-                android:paddingVertical="20dp"
-                app:layout_constraintBottom_toTopOf="@id/txt_recipe_intergents"
-                app:layout_constraintTop_toBottomOf="@id/img_title"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"/>
-            <TextView
-                android:id="@+id/txt_recipe_intergents"
-                android:layout_width="wrap_content"
+                android:paddingHorizontal="10dp"/>
+
+            <LinearLayout
+                android:id="@+id/ll_options"
+                android:layout_width="match_parent"
+                android:layout_marginHorizontal="20dp"
+                android:orientation="horizontal"
+                android:gravity="center"
                 android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/layout_cook_time"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txt_recipeName">
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:id="@+id/ll_plan"
+                    android:padding="5dp"
+                    android:gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/plan_icon"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="Plan"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:id="@+id/ll_shop"
+                    android:padding="5dp"
+                    android:layout_marginStart="10dp"
+                    android:gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/shop_icon"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="Shop"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:id="@+id/ll_cook"
+                    android:padding="5dp"
+                    android:layout_marginStart="10dp"
+                    android:gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/cook_icon"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="Cook"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:id="@+id/ll_rate"
+                    android:padding="5dp"
+                    android:layout_marginStart="10dp"
+                    android:gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/rate_icon"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="Rate"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:id="@+id/ll_share"
+                    android:padding="5dp"
+                    android:layout_marginStart="10dp"
+                    android:gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/share_icon"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="Share"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:id="@+id/ll_fav"
+                    android:padding="5dp"
+                    android:layout_marginStart="10dp"
+                    android:gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/fav_icon"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="Favorite"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layout_cook_time"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginVertical="10dp"
+                app:layout_constraintBottom_toTopOf="@+id/txt_ingredients"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/txt_recipe_preperation_time"
-                android:text="fhffhfhfhfhf"
-                android:layout_marginTop="10dp"
-                app:layout_constraintTop_toBottomOf="@id/txt_recipe_title"/>
+                app:layout_constraintTop_toBottomOf="@id/ll_options">
+
+                <TextView
+                    android:id="@+id/txt_Cousine"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Cousine Type:"
+                    app:layout_constraintBottom_toTopOf="@id/img_prep"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="@color/mainColor" />
+
+                <TextView
+                    android:id="@+id/txt_Cousine_value"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:paddingHorizontal="5dp"
+                    android:text="Lunch"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@id/txt_Cousine"
+                    app:layout_constraintEnd_toEndOf="@+id/txt_prep_time_value"
+                    app:layout_constraintStart_toEndOf="@+id/txt_Cousine"
+                    app:layout_constraintTop_toTopOf="@id/txt_Cousine"
+                    app:tint="@color/mainColor" />
+
+                <TextView
+                    android:id="@+id/txt_meal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Meal Type:"
+                    app:layout_constraintBottom_toTopOf="@+id/img_cook"
+                    app:layout_constraintEnd_toStartOf="@id/txt_meal_value"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="@color/mainColor" />
+
+                <TextView
+                    android:id="@+id/txt_meal_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:paddingHorizontal="5dp"
+                    android:text="Meal:"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/txt_meal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/txt_meal"
+                    app:tint="@color/mainColor" />
+
+                <ImageView
+                    android:id="@+id/img_prep"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="Preperation"
+                    android:src="@drawable/knife_icon"
+                    app:layout_constraintEnd_toStartOf="@id/txt_prep_time"
+                    app:layout_constraintBottom_toBottomOf="@id/txt_prep_time"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <TextView
+                    android:id="@+id/txt_prep_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Dish Type"
+                    android:layout_marginStart="5dp"
+                    app:layout_constraintEnd_toStartOf="@+id/txt_prep_time_value"
+                    app:layout_constraintStart_toEndOf="@id/img_prep"
+                    app:layout_constraintTop_toBottomOf="@id/txt_Cousine" />
+
+                <TextView
+                    android:id="@+id/txt_prep_time_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:paddingHorizontal="5dp"
+                    android:text="5 minutes"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@id/txt_prep_time"
+                    app:layout_constraintStart_toEndOf="@+id/txt_prep_time"
+                    app:layout_constraintTop_toTopOf="@id/txt_prep_time" />
+
+
+                <ImageView
+                    android:id="@+id/img_cook"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/cook_icon"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/txt_cook_time" />
+
+                <TextView
+                    android:id="@+id/txt_cook_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:paddingHorizontal="5dp"
+                    android:text="Health"
+                    app:layout_constraintBottom_toBottomOf="@id/img_cook"
+                    app:layout_constraintEnd_toStartOf="@+id/txt_cook_time_value"
+                    app:layout_constraintTop_toTopOf="@id/img_cook" />
+
+                <TextView
+                    android:id="@+id/txt_cook_time_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:paddingHorizontal="5dp"
+                    android:text="5 minutes"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@id/txt_cook_time"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/txt_cook_time" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
             <TextView
-                android:id="@+id/txt_recipe_preperation_time"
+                android:id="@+id/txt_ingredients"
+                style="@style/TextAppearance.AppCompat.Large"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:text="Ingredients"
+                android:paddingVertical="10dp"
+                app:layout_constraintBottom_toTopOf="@id/txt_recipe_description"
+                app:layout_constraintStart_toStartOf="@+id/layout_cook_time"
+                app:layout_constraintTop_toBottomOf="@id/layout_cook_time"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/txt_recipe_description"
+                app:layout_constraintStart_toStartOf="@id/layout_cook_time"
+                app:layout_constraintEnd_toEndOf="@id/layout_cook_time"
+                android:paddingVertical="10dp"
+                app:layout_constraintTop_toBottomOf="@id/txt_ingredients"
+                android:text="sfksfh skfh skfh skfhks fskf sf skfh skfh sfhsfk tghdsfks fshf kskfgh gks ghg ksskgsggs gggsksfks sgs gsgih gligslgsfjslgadhldig glg"/>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
-                android:text="fhffhfhfhfhf"
-                android:layout_marginTop="10dp"
-                app:layout_constraintTop_toBottomOf="@id/txt_recipe_intergents"/>
+                app:layout_constraintEnd_toEndOf="parent"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="5dp"
+                android:layout_marginHorizontal="20dp"
+                app:layout_constraintTop_toBottomOf="@+id/txt_recipe_description">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/txt_nutritions"
+                        style="@style/TextAppearance.AppCompat.Large"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Nutrition"
+                        android:padding="5dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintBottom_toTopOf="@+id/recyclerView"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/recyclerView"
+                        tools:listitem="@layout/nuration_items"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/txt_nutritions"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+
+
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
